@@ -15,6 +15,9 @@ public interface SongDao {
     @Delete
     void delete(Song song);
 
+    @Query("SELECT * FROM songs WHERE title = :title")
+    Song findByTitle(String title);
+
     @Query("SELECT * FROM songs WHERE artistId = :artistId")
     List<Song> findByArtistId(int artistId);
 
@@ -23,6 +26,12 @@ public interface SongDao {
 
     @Query("SELECT * FROM songs")
     List<Song> getAllSongs();
+
+    @Query("SELECT COUNT(*) FROM songs WHERE artistId = :artistId")
+    int getSongCountForArtist(int artistId);
+
+    @Query("SELECT COUNT(*) FROM playlist_songs WHERE playlistId = :playlistId")
+    int getSongCountForPlaylist(int playlistId);
 
     @Query("UPDATE songs SET playCount = playCount + 1, lastPlayed = :currentTime WHERE id = :songId")
     void incrementPlayCount(int songId, String currentTime);

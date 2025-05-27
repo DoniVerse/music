@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTrackClickListener {
+public class HomeActivity extends BottomNavigationActivity implements TrackAdapter.OnTrackClickListener {
     private static final String PREFS_NAME = "user_prefs";
     private static final String KEY_EMAIL = "user_email";
     private ApiInterface apiInterface;
@@ -47,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
     private TextView welcomeText;
     private String userEmail;
     private String username;
+    private BottomNavigationView bottomNavigationView;
     private final List<ApiArtist> popularArtists = Arrays.asList(
             createArtist("Eminem", "https://e-cdns-images.dzcdn.net/images/artist/19cc38f9d69b352f718782e7a22f9c32/250x250-000000-80-0-0.jpg"),
             createArtist("Ed Sheeran", "https://e-cdns-images.dzcdn.net/images/artist/2a03401e091893ec8abd8f15426b1147/250x250-000000-80-0-0.jpg"),
@@ -68,6 +70,7 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
         searchResultsLayout = findViewById(R.id.searchResultsLayout);
         welcomeText = findViewById(R.id.welcomeText);
         profileView = findViewById(R.id.profileView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         
         // Get user email from shared preferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -85,6 +88,9 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
         
         // Setup profile circle click
         profileView.setOnClickListener(v -> showProfileMenu(v));
+        
+        // Setup bottom navigation
+        setupBottomNavigation();
         
         // Setup API and RecyclerViews
         setupDeezerApi();
@@ -106,6 +112,71 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
             }
         });
     }
+    
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.navigation_home) {
+                // Navigate to HomeFragment
+                getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contentFrame, new HomeFragment())
+                    .commit();
+                return true;
+            } else if (item.getItemId() == R.id.navigation_library) {
+                // Navigate to LibraryFragment
+                getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contentFrame, new LibraryFragment())
+                    .commit();
+                return true;
+            } else if (item.getItemId() == R.id.navigation_create) {
+                showCreateMenu();
+                return true;
+            }
+            return false;
+        });
+        
+        // Set default selected item
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+    }
+    
+    private void showCreateMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, bottomNavigationView);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.create_popup_menu, popupMenu.getMenu());
+        
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.create_playlist) {
+                showCreatePlaylistDialog();
+                return true;
+            } else if (item.getItemId() == R.id.create_album) {
+                showCreateAlbumDialog();
+                return true;
+            } else if (item.getItemId() == R.id.create_station) {
+                showCreateStationDialog();
+                return true;
+            }
+            return false;
+        });
+        
+        popupMenu.show();
+    }
+    
+    private void showCreatePlaylistDialog() {
+        CreatePlaylistDialogFragment dialog = new CreatePlaylistDialogFragment();
+        dialog.show(getSupportFragmentManager(), "create_playlist_dialog");
+    }
+    
+    private void showCreateAlbumDialog() {
+        // TODO: Implement album creation dialog
+        Toast.makeText(this, "Create Album coming soon!", Toast.LENGTH_SHORT).show();
+    }
+    
+    private void showCreateStationDialog() {
+        // TODO: Implement station creation dialog
+        Toast.makeText(this, "Create Station coming soon!", Toast.LENGTH_SHORT).show();
+    }
+    
     private void showProfileMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
         MenuInflater inflater = popupMenu.getMenuInflater();
