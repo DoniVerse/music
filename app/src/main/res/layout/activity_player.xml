@@ -117,7 +117,7 @@
             android:id="@+id/playPauseButton"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:background="@drawable/outline_ac_unit_24"
+            android:background="@drawable/circular_button_background"
             android:src="@android:drawable/ic_media_play"
             app:tint="@color/white" />
 

@@ -19,6 +19,19 @@
             android:src="@drawable/ic_music_note"/>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Full Name"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +50,7 @@
             android:id="@+id/passwordLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true">
 
@@ -49,29 +62,38 @@
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/rememberMeCheckbox"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/confirmPasswordLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remember Me"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="24dp"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmPasswordInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/loginButton"
+            android:id="@+id/signupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Login"
+            android:text="Sign Up"
             style="@style/Widget.MaterialComponents.Button"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Don't have an account? Sign up"
+            android:text="Already have an account? Login"
             android:textColor="?attr/colorPrimary"
             android:clickable="true"
-            android:id="@+id/signupPrompt"/>
+            android:id="@+id/loginPrompt"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
