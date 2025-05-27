@@ -1,14 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_android_black_24dp"
-        android:title="Home"/>
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    
     <item
-        android:id="@+id/nav_local"
-        android:icon="@drawable/ic_android_black_24dp"
-        android:title="Local"/>
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_library"
+        android:title="Library" />
+    
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/ic_back_arrow"
-        android:title="Search"/>
+        android:id="+id/navigation_create"
+        android:icon="@drawable/ic_plus"
+        android:title="Create" />
 </menu>

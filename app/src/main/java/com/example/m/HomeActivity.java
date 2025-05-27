@@ -3,14 +3,19 @@ package com.example.m;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -30,6 +35,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTrackClickListener {
+    private static final String PREFS_NAME = "user_prefs";
+    private static final String KEY_EMAIL = "user_email";
     private ApiInterface apiInterface;
     private SearchView searchView;
     private RecyclerView artistsRecyclerView;
@@ -38,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
     private View searchResultsLayout;
     private CircularProfileView profileView;
     private TextView welcomeText;
+    private String userEmail;
     private String username;
     private final List<ApiArtist> popularArtists = Arrays.asList(
             createArtist("Eminem", "https://e-cdns-images.dzcdn.net/images/artist/19cc38f9d69b352f718782e7a22f9c32/250x250-000000-80-0-0.jpg"),
@@ -61,6 +69,23 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
         welcomeText = findViewById(R.id.welcomeText);
         profileView = findViewById(R.id.profileView);
         
+        // Get user email from shared preferences
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        userEmail = prefs.getString(KEY_EMAIL, "");
+        
+        // Set profile circle letter
+        if (!userEmail.isEmpty()) {
+            String firstLetter = userEmail.substring(0, 1).toUpperCase();
+            profileView.setLetter(firstLetter);
+            
+            // Set welcome text
+            welcomeText.setText("Welcome back!");
+            welcomeText.animate().alpha(1f).setDuration(500);
+        }
+        
+        // Setup profile circle click
+        profileView.setOnClickListener(v -> showProfileMenu(v));
+        
         // Setup API and RecyclerViews
         setupDeezerApi();
         setupRecyclerViews();
@@ -80,6 +105,34 @@ public class HomeActivity extends AppCompatActivity implements TrackAdapter.OnTr
                 return false;
             }
         });
+    }
+    private void showProfileMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, popupMenu.getMenu());
+        
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_logout) {
+                logout();
+                return true;
+            }
+            return false;
+        });
+        
+        popupMenu.show();
+    }
+    private void logout() {
+        // Clear user session
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+        
+        // Navigate back to LoginActivity
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     private void setupDeezerApi() {
         Retrofit retrofit = new Retrofit.Builder()
