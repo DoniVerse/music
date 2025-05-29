@@ -82,7 +82,7 @@ public class HomeActivity extends BottomNavigationActivity implements TrackAdapt
             profileView.setLetter(firstLetter);
             
             // Set welcome text
-            welcomeText.setText("Welcome back!");
+
             welcomeText.animate().alpha(1f).setDuration(500);
         }
         
